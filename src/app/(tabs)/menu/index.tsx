@@ -1,18 +1,20 @@
-import ProductListItem from '@components/ProductListItem';
-import { HorizontalFlatList } from '@idiosync/horizontal-flatlist';
-import products from 'assets/data/products';
-
-
+import ProductListItem from "@components/ProductListItem";
+import products from "assets/data/products";
+import { FlatList } from "react-native";
 
 export default function MenuScreen() {
-   return (
-    <HorizontalFlatList
-       data={products}
-       numRows={2}
-       keyExtractor={(item, row, col) => `${item.id}-${row}-${col}`}
-       renderItem={({ item }) => <ProductListItem product={item} />}
-       contentContainerStyle={{ gap: 10, padding: 10 }}
-       columnStyle={{ gap: 10 }}/>
+  return (
+    <FlatList
+      data={products}
+      numColumns={1}
+      renderItem={({ item }) => <ProductListItem product={item} />}
+      contentContainerStyle={{
+        gap: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        justifyContent: "space-between",
+      }}
+      showsVerticalScrollIndicator={false}
+    />
   );
 }
-

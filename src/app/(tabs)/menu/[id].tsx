@@ -1,30 +1,48 @@
 import AddToCartButton from "@/app/components/AddToCartButton";
 import { defaulImage } from "@/app/components/ProductListItem";
+import { useCart } from "@/app/providers/CartProvider";
+import { PizzaSize } from "@assets/types";
 import products from "assets/data/products";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-const sizes = ["S", "M", "L", "XL"];
+const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
 const SIZE = 50;
 
 const ProductDetailScreen = () => {
   const { id } = useLocalSearchParams();
 
+  const router = useRouter();
+
+  const { addItem } = useCart();
+
   const product = products.find((p) => p.id.toString() == id);
 
-  const [SelectedSize, setSelectedSize] = useState("M");
+  const [SelectedSize, setSelectedSize] = useState<PizzaSize>("M");
 
   const addToCart = () => {
-    console.warn("adding to cart: ", SelectedSize);
+    if (!product) {
+      return;
+    }
+    addItem(product, SelectedSize);
+
+    router.push("/cart");
   };
 
   if (!product) {
     return <Text>Product not found</Text>;
   }
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Stack.Screen options={{ title: product.name }} />
       <Image
         style={styles.image}
@@ -58,7 +76,7 @@ const ProductDetailScreen = () => {
       </View>
       <Text style={styles.price}>Price: ${product.price.toFixed(2)}</Text>
       <AddToCartButton onPress={addToCart} text="Add to cart" />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -66,7 +84,7 @@ export default ProductDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#060606",
     flex: 1,
     padding: 10,
   },
@@ -75,7 +93,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   price: {
-    color: "black",
+    color: "#ffffff",
     fontSize: 18,
     fontWeight: "bold",
     marginTop: "auto",
@@ -83,6 +101,7 @@ const styles = StyleSheet.create({
 
   sizeSelectorText: {
     marginStart: 5,
+    color: "white",
     marginVertical: 5,
     fontSize: 18,
     fontWeight: "bold",
