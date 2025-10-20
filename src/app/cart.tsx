@@ -1,20 +1,41 @@
 import { useCart } from "@providers/CartProvider";
-import { FlatList, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
+import AddToCartButton from "./components/AddToCartButton";
 import CartListItem from "./components/CartListItem";
 
 const CartScreen = () => {
-  const { items } = useCart();
+  const { items, total } = useCart();
 
   return (
-    <View>
+    <View style={{ padding: 10 }}>
       <FlatList
         data={items}
         renderItem={({ item }) => <CartListItem cartItem={item} />}
         contentContainerStyle={{
           gap: 10,
-          padding: 10,
         }}
       />
+      {items.length > 0 ? (
+        <>
+          <Text
+            style={{
+              marginTop: 20,
+              color: "white",
+              fontSize: 20,
+              fontWeight: "bold",
+              alignSelf: "flex-end",
+            }}
+          >
+            Total: {total}
+          </Text>
+          <AddToCartButton
+            text="Checkout"
+            onPress={() => {
+              throw new Error("Function not implemented.");
+            }}
+          />
+        </>
+      ) : null}
     </View>
   );
 };
